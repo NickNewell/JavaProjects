@@ -1,4 +1,7 @@
-// import the Scanner class 
+
+// Importing the Scanner class and exception handler. 
+
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 class Main {
@@ -8,15 +11,19 @@ class Main {
 
     while (repeat == null || repeat.equals("y")) {
       
-        // Declaring variables
+        // Declaring variables.
 
         String userShape = null;
         int userHeight = 0;
         String userLabel = null;
         int userRow = 0;
 
-        // Begin gathering inputs
-        
+        //
+        // Begin gathering inputs.
+        //
+
+        // Gathering shape type.
+
         while (userShape == null) {
             Scanner input = new Scanner(System.in);
             System.out.println("Choose between a triangle, inverted triangle, square, or diamond: ");
@@ -28,18 +35,28 @@ class Main {
             System.out.println();
         }
 
-        while (userHeight == 0) {
-            Scanner input = new Scanner(System.in);
-            System.out.println("How many rows tall should the " + userShape + " be?");
-            int answer = input.nextInt();
+        // Gathering height of shape. Exceptions created for integers 0 and below, as well as non-integers. 
 
-            if (answer > 0) {
-                userHeight = answer;
-            } else {
+        while (userHeight < 1) {
+            try {
+                Scanner input = new Scanner(System.in);
                 System.out.println("How many rows tall should the " + userShape + " be?");
+                userHeight = input.nextInt();
+                if (userHeight < 1) {
+                    throw new ArithmeticException();
+                }
+            } catch (InputMismatchException e) {
+                System.out.println();
+                System.out.println("Please enter a positive integer.");
+            } catch (ArithmeticException e) {
+                System.out.println();
+                System.out.println("Please enter a positive integer.");
             }
-            System.out.println();
-        }
+        } 
+        
+        System.out.println();
+
+        // Gathering message to be inserted into shape.
 
         while (userLabel == null) {
             Scanner input = new Scanner(System.in);
@@ -54,20 +71,39 @@ class Main {
             System.out.println();
         }
 
-        while (userRow == 0) {
-            Scanner input = new Scanner(System.in);
-            System.out.println("Which row should I print \"" + userLabel + "\" on?");
-            int answer = input.nextInt();
+        // Gathering row to insert message on. 
 
-            if (answer > userHeight) {
-                System.out.println("Row " + answer + " exceeds your shape height of " + userHeight + ". Please input a number that is less than or equal to " + userHeight + ".");
-            } else if (answer > 0) {
-                userRow = answer;
+        while (userRow < 1 || userRow > userHeight) {
+            try {
+                Scanner input = new Scanner(System.in);
+                System.out.println("Which row should I print \"" + userLabel + "\" on?");
+                userRow = input.nextInt();
+                
+                if (userRow < 1) {
+                    throw new ArithmeticException();
+                }
+                if (userRow > userHeight) {
+                    throw new RuntimeException ();
+                }
+            } catch (InputMismatchException e) {
+                System.out.println();
+                System.out.println("Please enter a positive integer.");
+            } catch (ArithmeticException e) {
+                System.out.println();
+                System.out.println("Please enter a positive integer.");
+            } catch (RuntimeException e) {
+                System.out.println();
+                System.out.println("Row " + userRow + " exceeds your shape height of " + userHeight + ". Please input a number that is less than or equal to " + userHeight + ".");
             }
-            System.out.println();
-        }
+        } 
 
-        // Call the triangle class
+        System.out.println();
+
+        //
+        // Time to build some shapes. 
+        //
+
+        // Call the triangle class.
 
         if (userShape.equals("triangle")) {
             Triangle.triangle(userHeight, userRow, userLabel, 0);
@@ -79,21 +115,21 @@ class Main {
             System.out.println();
         }
 
-        // Call the square class
+        // Call the square class.
 
         if (userShape.equals("square")) {
             Square.square(userHeight, userRow, userLabel);
             System.out.println();
         }
 
-        // Call the diamond class
+        // Call the diamond class.
 
         if (userShape.equals("diamond")) {
             Diamond.diamond(userHeight, userRow, userLabel);
             System.out.println();
         }
 
-        // Exit clause
+        // Exit clause.
 
         repeat = null;
         while (repeat == null) {
