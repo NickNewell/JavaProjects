@@ -71,20 +71,26 @@ class Main {
             System.out.println();
         }
 
-        // Gathering row to insert message on. 
+        // Gathering row to insert message on. If left blank, it will set it at 4 or the bottom line if less than 4. 
 
         while (userRow < 1 || userRow > userHeight) {
             try {
                 Scanner input = new Scanner(System.in);
                 System.out.println("Which row should I print \"" + userLabel + "\" on?");
-                userRow = input.nextInt();
+                String answer = input.nextLine();
                 
-                if (userRow < 1) {
+                if (answer.isEmpty() && userHeight < 4) {
+                    userRow = userHeight;
+                } else if (answer.isEmpty()) {
+                    userRow = 4;
+                } else if (Integer.valueOf(answer) < 1) {
                     throw new ArithmeticException();
-                }
-                if (userRow > userHeight) {
+                } else if (Integer.valueOf(answer) > userHeight) {
                     throw new RuntimeException ();
+                } else {
+                    userRow = Integer.valueOf(answer);
                 }
+
             } catch (InputMismatchException e) {
                 System.out.println();
                 System.out.println("Please enter a positive integer.");
